@@ -1,4 +1,4 @@
-#line 1 "c:\\Users\\Bayhaqi\\Documents\\Kuliah\\Code\\Arduino\\step\\UniversalStep.h"
+#line 1 "c:\\Users\\Bayhaqi\\Documents\\project\\arduino\\Farmbot-Arduino\\UniversalStep.h"
 #include <Arduino.h>
 
 class UniversalStep
@@ -70,3 +70,5 @@ public:
         }
     }
 };
+#line 1 "c:\\Users\\Bayhaqi\\Documents\\project\\arduino\\Farmbot-Arduino\\step.ino"
+

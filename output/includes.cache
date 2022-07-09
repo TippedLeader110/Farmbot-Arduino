@@ -10,37 +10,12 @@
     "Includepath": "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\variants\\mega"
   },
   {
-    "Sourcefile": "c:\\Users\\Bayhaqi\\Documents\\Kuliah\\Code\\Arduino\\step\\output\\sketch\\step.ino.cpp",
-    "Include": "Stepper.h",
-    "Includepath": "C:\\Program Files (x86)\\Arduino\\libraries\\Stepper\\src"
-  },
-  {
-    "Sourcefile": "c:\\Users\\Bayhaqi\\Documents\\Kuliah\\Code\\Arduino\\step\\output\\sketch\\step.ino.cpp",
-    "Include": "AccelStepper.h",
-    "Includepath": "C:\\Users\\Bayhaqi\\Documents\\Arduino\\libraries\\AccelStepper\\src"
-  },
-  {
-    "Sourcefile": "c:\\Users\\Bayhaqi\\Documents\\Kuliah\\Code\\Arduino\\step\\output\\sketch\\step.ino.cpp",
+    "Sourcefile": "c:\\Users\\Bayhaqi\\Documents\\project\\arduino\\Farmbot-Arduino\\output\\sketch\\UniversalStep.h.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "c:\\Users\\Bayhaqi\\Documents\\Kuliah\\Code\\Arduino\\step\\output\\sketch\\UniversalStep.h.old.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "C:\\Program Files (x86)\\Arduino\\libraries\\Stepper\\src\\Stepper.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "C:\\Users\\Bayhaqi\\Documents\\Arduino\\libraries\\AccelStepper\\src\\AccelStepper.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "C:\\Users\\Bayhaqi\\Documents\\Arduino\\libraries\\AccelStepper\\src\\MultiStepper.cpp",
+    "Sourcefile": "c:\\Users\\Bayhaqi\\Documents\\project\\arduino\\Farmbot-Arduino\\output\\sketch\\UniversalStep.h.old.cpp",
     "Include": "",
     "Includepath": null
   }

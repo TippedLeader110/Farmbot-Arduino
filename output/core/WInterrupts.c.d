@@ -1,4 +1,4 @@
-c:\Users\Bayhaqi\Documents\Kuliah\Code\Arduino\step\output\core\WInterrupts.c.o: \
+c:\Users\Bayhaqi\Documents\project\arduino\Farmbot-Arduino\output\core\WInterrupts.c.o: \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino\WInterrupts.c \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_private.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino\Arduino.h \

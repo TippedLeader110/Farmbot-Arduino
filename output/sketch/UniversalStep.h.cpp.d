@@ -1,5 +1,5 @@
-c:\Users\Bayhaqi\Documents\Kuliah\Code\Arduino\step\output\sketch\step.ino.cpp.o: \
- c:\Users\Bayhaqi\Documents\Kuliah\Code\Arduino\step\output\sketch\step.ino.cpp \
+c:\Users\Bayhaqi\Documents\project\arduino\Farmbot-Arduino\output\sketch\UniversalStep.h.cpp.o: \
+ c:\Users\Bayhaqi\Documents\project\arduino\Farmbot-Arduino\output\sketch\UniversalStep.h.cpp \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/binary.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/WCharacter.h \
@@ -10,7 +10,4 @@ c:\Users\Bayhaqi\Documents\Kuliah\Code\Arduino\step\output\sketch\step.ino.cpp.o
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Printable.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/USBAPI.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\mega/pins_arduino.h \
- C:\Program\ Files\ (x86)\Arduino\libraries\Stepper\src/Stepper.h \
- C:\Users\Bayhaqi\Documents\Arduino\libraries\AccelStepper\src/AccelStepper.h \
- c:\Users\Bayhaqi\Documents\Kuliah\Code\Arduino\step\output\sketch\UniversalStep.h
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\mega/pins_arduino.h

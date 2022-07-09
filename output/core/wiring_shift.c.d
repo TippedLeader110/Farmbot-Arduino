@@ -1,4 +1,4 @@
-c:\Users\Bayhaqi\Documents\Kuliah\Code\Arduino\step\output\core\wiring_shift.c.o: \
+c:\Users\Bayhaqi\Documents\project\arduino\Farmbot-Arduino\output\core\wiring_shift.c.o: \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_shift.c \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_private.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino\Arduino.h \
