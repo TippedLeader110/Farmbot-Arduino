@@ -111,7 +111,7 @@ void doCommand(int cm)
 	}
 }
 
-void resetPosition()
+void resetPositionZero()
 {
 	stepZ.moveTo(0);
 	stepZ.runToPosition();
@@ -229,7 +229,7 @@ void loop()
 		{
 			delay(2000);
 		}else if (order == "r"){
-			resetPosition();
+			resetPositionZero();
 		}
 		// printLocation();
 	}
