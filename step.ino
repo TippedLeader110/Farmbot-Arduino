@@ -58,10 +58,9 @@ void moveAxis(int langkah, int axis)
 		stepY.runToPosition();
 		ypos = posisiLangkah;
 
-		if(cmd==2 || cmd==1){
-			doCommand(cmd);
-			checkoutSerial(1);	
-		}
+		doCommand(cmd);
+		checkoutSerial(2);
+
 		// sty.OneStep(langkah, speed);
 		// ypos = sty.GetLokasi();
 	}
@@ -74,6 +73,7 @@ void moveAxis(int langkah, int axis)
 		// stz.OneStep(langkah, speed);
 		// zpos = stz.GetLokasi();
 	}
+
 	// stx.OneStep(true, langkah, 1000);
 	// doCommand(cmd);
 	// checkoutSerial(1);
@@ -102,6 +102,23 @@ void doCommand(int cm)
 		delay(8000);
 		digitalWrite(air, HIGH);
 	}
+	else if (cmd == 6)
+	{
+		stepZ.moveTo(30);
+		stepZ.runToPosition();
+		zpos = 30;
+		checkoutSerial(cmd);
+	}
+}
+
+void resetPosition()
+{
+	stepZ.moveTo(0);
+	stepZ.runToPosition();
+	stepY.moveTo(0);
+	stepY.runToPosition();
+	stepX.moveTo(0);
+	stepX.runToPosition();
 }
 
 void checkoutSerial(int status)
@@ -127,13 +144,14 @@ void checkoutSerial(int status)
 		delay(1000);
 		Serial.print(F("{"));
 		Serial.print(F("\"status\": "));
-		Serial.print(2);
+		Serial.print(status);
+		Serial.print(F(", \"cmd\": "));
+		Serial.print(cmd);
 		Serial.println(F("}"));
 		delay(1000);
 		cmd = 0;
-
 	}
-	delay(1000);
+	delay(5000);
 }
 
 void resetPosition()
@@ -210,6 +228,8 @@ void loop()
 		else if (order == "d")
 		{
 			delay(2000);
+		}else if (order == "r"){
+			resetPosition();
 		}
 		// printLocation();
 	}
