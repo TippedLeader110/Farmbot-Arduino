@@ -48,9 +48,6 @@ void moveAxis(int langkah, int axis)
 		stepX.moveTo(langkah);
 		stepX.runToPosition();
 		xpos = posisiLangkah;
-
-		// stx.OneStep(langkah, speed);
-		// xpos = stx.GetLokasi();
 	}
 	else if (axis == 2)
 	{
@@ -59,24 +56,7 @@ void moveAxis(int langkah, int axis)
 		ypos = posisiLangkah;
 
 		doCommand(cmd);
-		checkoutSerial(2);
-
-		// sty.OneStep(langkah, speed);
-		// ypos = sty.GetLokasi();
 	}
-	else
-	{
-		stepZ.moveTo(langkah);
-		stepZ.runToPosition();
-		zpos = posisiLangkah;
-
-		// stz.OneStep(langkah, speed);
-		// zpos = stz.GetLokasi();
-	}
-
-	// stx.OneStep(true, langkah, 1000);
-	// doCommand(cmd);
-	// checkoutSerial(1);
 }
 
 void printLocation()
@@ -107,23 +87,27 @@ void doCommand(int cm)
 		stepZ.moveTo(30);
 		stepZ.runToPosition();
 		zpos = 30;
-		checkoutSerial(cmd);
 	}
+	checkoutSerial("1");
 }
 
 void resetPositionZero()
 {
 	stepZ.moveTo(0);
 	stepZ.runToPosition();
+	zpos = 0;
 	stepY.moveTo(0);
 	stepY.runToPosition();
+	ypos = 0;
 	stepX.moveTo(0);
 	stepX.runToPosition();
+	xpos = 0;
+	checkoutSerial("2");
 }
 
-void checkoutSerial(int status)
+void checkoutSerial(String status)
 {
-	if (status == 1)
+	if (status == "1")
 	{
 		delay(1000);
 		Serial.print(F("{\"x\": "));
@@ -134,18 +118,18 @@ void checkoutSerial(int status)
 		Serial.print(zpos);
 		Serial.print(F(", \"cmd\": "));
 		Serial.print(cmd);
-		Serial.print(F(", \"status\": "));
+		Serial.print(F(", \"status\": \""));
 		Serial.print(status);
-		Serial.println(F("}"));
+		Serial.println(F("\"}"));
 		delay(1000);
 	}
 	else
 	{
 		delay(1000);
 		Serial.print(F("{"));
-		Serial.print(F("\"status\": "));
+		Serial.print(F("\"status\": \""));
 		Serial.print(status);
-		Serial.print(F(", \"cmd\": "));
+		Serial.print(F("\", \"cmd\": "));
 		Serial.print(cmd);
 		Serial.println(F("}"));
 		delay(1000);
@@ -188,6 +172,7 @@ void loop()
 		if (order == "c")
 		{
 			cmd = incomingValue;
+			checkoutSerial("c");
 		}
 		else if (order == "start")
 		{
@@ -195,7 +180,7 @@ void loop()
 		}
 		else if (order == "e")
 		{
-			checkoutSerial(2);
+			checkoutSerial("2");
 		}
 		else if (order == "dd")
 		{
@@ -217,10 +202,10 @@ void loop()
 		{
 			moveAxis(incomingValue, 2);
 		}
-		else if (order == "z")
-		{
-			moveAxis(incomingValue, 3);
-		}
+		// else if (order == "z")
+		// {
+		// 	moveAxis(incomingValue, 3);
+		// }
 		else if (order == "dt")
 		{
 			delayTime = incomingValue;
@@ -228,7 +213,9 @@ void loop()
 		else if (order == "d")
 		{
 			delay(2000);
-		}else if (order == "r"){
+		}
+		else if (order == "r")
+		{
 			resetPositionZero();
 		}
 		// printLocation();
