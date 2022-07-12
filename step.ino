@@ -3,6 +3,7 @@
 #include <AccelStepper.h>
 #include "UniversalStep.h"
 #define air 30
+#define npk 28
 
 UniversalStep stx(5, 2, 200);
 UniversalStep sty(6, 3, 200);
@@ -28,6 +29,7 @@ void setup()
 	pinMode(LED_BUILTIN, OUTPUT);
 	pinMode(2, OUTPUT);
 	pinMode(air, OUTPUT);
+	pinMode(npk, OUTPUT);
 	Serial.begin(9600);
 	// Serial.println((String) " DIR :" + stx.GetDirPin() + " STEP :" + stx.GetStepPin() + " STEPROTATION :" + stx.GetStepPerRevolution());
 	stepX.setMaxSpeed(maxSpeed);
@@ -78,9 +80,14 @@ void doCommand(int cm)
 	}
 	else if (cm == 2)
 	{
-		digitalWrite(air, LOW);
-		delay(8000);
 		digitalWrite(air, HIGH);
+		delay(8000);
+		digitalWrite(air, LOW);
+	}
+	else if (cmd == 7){
+		digitalWrite(npk, HIGH);
+		delay(8000);
+		digitalWrite(npk, LOW);
 	}
 	else if (cmd == 6)
 	{
@@ -142,7 +149,7 @@ void resetPosition()
 {
 	stx.OneStep(10, 1000);
 	sty.OneStep(10, 1000);
-	stz.OneStep(10, 1000);
+	stz.OneStep(-10, 1000);
 	first = false;
 }
 
@@ -155,7 +162,8 @@ void loop()
 
 	if (first)
 	{
-		digitalWrite(air, HIGH);
+		digitalWrite(air, LOW);
+		digitalWrite(npk, LOW);
 		Serial.println((String) "start");
 		delay(1000);
 		resetPosition();
