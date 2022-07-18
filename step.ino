@@ -2,8 +2,9 @@
 #include <Stepper.h>
 #include <AccelStepper.h>
 #include "UniversalStep.h"
-#define air 30
-#define npk 28
+#define air 28
+#define npk 30
+#define limit_switch_pin_x 22
 
 UniversalStep stx(5, 2, 200);
 UniversalStep sty(6, 3, 200);
@@ -23,6 +24,10 @@ int cmd = 0;
 int delayTime = 0;
 int maxSpeed = 700;
 int maxAccel = 700;
+
+int msy = 380;
+int may = 2800;
+
 void setup()
 {
 	pinMode(5, OUTPUT);
@@ -31,17 +36,36 @@ void setup()
 	pinMode(air, OUTPUT);
 	pinMode(npk, OUTPUT);
 	Serial.begin(9600);
+	pinMode(limit_switch_pin_x, INPUT_PULLUP);
+	attachInterrupt(digitalPinToInterrupt(limit_switch_pin_x), stopMotorX, FALLING);
+
 	// Serial.println((String) " DIR :" + stx.GetDirPin() + " STEP :" + stx.GetStepPin() + " STEPROTATION :" + stx.GetStepPerRevolution());
 	stepX.setMaxSpeed(maxSpeed);
 	stepX.setAcceleration(maxAccel);
-	stepY.setMaxSpeed(maxSpeed);
-	stepY.setAcceleration(maxAccel);
-	stepZ.setMaxSpeed(maxSpeed);
-	stepZ.setAcceleration(maxAccel);
+	stepY.setMaxSpeed(msy);
+	stepY.setAcceleration(may);
+	stepZ.setMaxSpeed(msy);
+	stepZ.setAcceleration(may);
+	disStep();
+}
+
+void disStep()
+{
+	stepY.disableOutputs();
+	stepX.disableOutputs();
+	stepZ.disableOutputs();
+}
+
+void enStep()
+{
+	stepY.enableOutputs();
+	stepX.enableOutputs();
+	stepZ.enableOutputs();
 }
 
 void moveAxis(int langkah, int axis)
 {
+	enStep();
 	int posisiLangkah = langkah;
 	langkah *= 200;
 	Serial.println((String) "langkah : " + posisiLangkah + " (" + langkah + ")");
@@ -56,7 +80,7 @@ void moveAxis(int langkah, int axis)
 		stepY.moveTo(langkah);
 		stepY.runToPosition();
 		ypos = posisiLangkah;
-
+		disStep();
 		doCommand(cmd);
 	}
 }
@@ -84,7 +108,8 @@ void doCommand(int cm)
 		delay(8000);
 		digitalWrite(air, LOW);
 	}
-	else if (cmd == 7){
+	else if (cmd == 7)
+	{
 		digitalWrite(npk, HIGH);
 		delay(8000);
 		digitalWrite(npk, LOW);
@@ -93,7 +118,10 @@ void doCommand(int cm)
 	{
 		stepZ.moveTo(30);
 		stepZ.runToPosition();
-		zpos = 30;
+		delay(5500);
+		stepZ.moveTo(0);
+		stepZ.runToPosition();
+		zpos = 0;
 	}
 	checkoutSerial("1");
 }
@@ -140,7 +168,6 @@ void checkoutSerial(String status)
 		Serial.print(cmd);
 		Serial.println(F("}"));
 		delay(1000);
-		cmd = 0;
 	}
 	delay(5000);
 }
@@ -151,23 +178,11 @@ void resetPosition()
 	sty.OneStep(10, 1000);
 	stz.OneStep(-10, 1000);
 	first = false;
+	cmd = 0;
 }
 
-void loop()
+void recPerintah()
 {
-	// Serial.println((String)"START");
-	digitalWrite(LED_BUILTIN, HIGH);
-	delay(1000);
-	digitalWrite(LED_BUILTIN, LOW);
-
-	if (first)
-	{
-		digitalWrite(air, LOW);
-		digitalWrite(npk, LOW);
-		Serial.println((String) "start");
-		delay(1000);
-		resetPosition();
-	}
 
 	if (Serial.available() > 1)
 	{
@@ -228,4 +243,46 @@ void loop()
 		}
 		// printLocation();
 	}
+}
+
+void stopMotorX() // function activated by the pressed microswitch
+{
+	stepX.setCurrentPosition(0); // reset position
+	stepX.stop();				 // stop motor
+	stepX.disableOutputs();		 // disable power
+	xpos = 0;
+}
+
+void stopMotorY() // function activated by the pressed microswitch
+{
+	stepY.setCurrentPosition(0); // reset position
+	stepY.stop();				 // stop motor
+	stepY.disableOutputs();		 // disable power
+	ypos = 0;
+}
+
+void stopMotorZ() // function activated by the pressed microswitch
+{
+	stepZ.setCurrentPosition(0); // reset position
+	stepZ.stop();				 // stop motor
+	stepZ.disableOutputs();		 // disable power
+	zpos = 0;
+}
+
+void loop()
+{
+	// Serial.println((String)"START");
+	digitalWrite(LED_BUILTIN, HIGH);
+	// delay(1000);
+	digitalWrite(LED_BUILTIN, LOW);
+
+	if (first)
+	{
+		digitalWrite(air, LOW);
+		digitalWrite(npk, LOW);
+		Serial.println((String) "start");
+		delay(1000);
+		resetPosition();
+	}
+	recPerintah();
 }
