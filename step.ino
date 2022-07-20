@@ -18,6 +18,8 @@ AccelStepper stepX = AccelStepper(1, 2, 5);
 AccelStepper stepY = AccelStepper(1, 3, 6);
 AccelStepper stepZ = AccelStepper(1, 4, 7);
 
+int countFirst = 0;
+bool terhubung = false;
 bool resetPosX = true;
 bool resetPosY = true;
 bool resetPosZ = false;
@@ -232,6 +234,7 @@ void recPerintah()
 		delay(1000);
 		if (order == "c")
 		{
+			terhubung = true;
 			cmd = incomingValue;
 			checkoutSerial("c");
 		}
@@ -322,10 +325,14 @@ void checkReset()
 {
 	if (!resetPosX && !resetPosZ)
 	{
-		if(resetFirst){
+		if (resetFirst && countFirst == 0)
+		{
 			resetFirst = false;
+			countFirst++;
 			Serial.println((String) "start");
-		}else{
+		}
+		else if (!resetFirst && terhubung)
+		{
 			checkoutSerial("2");
 		}
 	}
