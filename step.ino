@@ -4,7 +4,8 @@
 #include "UniversalStep.h"
 #define air 28
 #define npk 30
-#define limit_switch_pin_x 22
+#define limit_switch_pin_x 26
+#define limit_switch_pin_y 24
 
 UniversalStep stx(5, 2, 200);
 UniversalStep sty(6, 3, 200);
@@ -12,10 +13,14 @@ UniversalStep stz(7, 4, 200);
 
 int val = 5;
 bool first = true;
+bool resetFirst = true;
 AccelStepper stepX = AccelStepper(1, 2, 5);
 AccelStepper stepY = AccelStepper(1, 3, 6);
 AccelStepper stepZ = AccelStepper(1, 4, 7);
 
+bool resetPosX = true;
+bool resetPosY = true;
+bool resetPosZ = false;
 int speed = 1000;
 int xpos = 0;
 int ypos = 0;
@@ -37,6 +42,7 @@ void setup()
 	pinMode(npk, OUTPUT);
 	Serial.begin(9600);
 	pinMode(limit_switch_pin_x, INPUT_PULLUP);
+	pinMode(limit_switch_pin_y, INPUT_PULLUP);
 	attachInterrupt(digitalPinToInterrupt(limit_switch_pin_x), stopMotorX, FALLING);
 
 	// Serial.println((String) " DIR :" + stx.GetDirPin() + " STEP :" + stx.GetStepPin() + " STEPROTATION :" + stx.GetStepPerRevolution());
@@ -111,7 +117,7 @@ void doCommand(int cm)
 	else if (cmd == 7)
 	{
 		digitalWrite(npk, HIGH);
-		delay(8000);
+		delay(30000);
 		digitalWrite(npk, LOW);
 	}
 	else if (cmd == 6)
@@ -128,16 +134,47 @@ void doCommand(int cm)
 
 void resetPositionZero()
 {
-	stepZ.moveTo(0);
-	stepZ.runToPosition();
-	zpos = 0;
-	stepY.moveTo(0);
-	stepY.runToPosition();
-	ypos = 0;
-	stepX.moveTo(0);
-	stepX.runToPosition();
-	xpos = 0;
-	checkoutSerial("2");
+	resetPosX = true;
+	resetPosY = true;
+	// while (loop)
+	// {
+	//
+	// }
+
+	// checkoutSerial("2");
+
+	// home = false;
+	// while (!home)
+	// {
+	// 	if (motor_stop == true)
+	// 	{
+	// 		stopMotor();
+	// 		home = true;
+	// 	}
+	// 	else
+	// 	{
+	//
+	// 		checkoutSerial("2");
+	// 		if (digitalRead(26) == LOW)
+	// 		{
+	// 			delay(200);
+	// 			motor_stop = false;
+	// 		}
+	// 	}
+	// }
+
+	// if (digitalRead(26) == LOW)
+	// {
+	// 	delay(200);
+	// 	motor_stop = false;
+	// }
+	// else
+	// {
+	// 	stx.OneStep(10, 1000);
+	// 	sty.OneStep(10, 1000);
+	// 	stz.OneStep(-10, 1000);
+	// 	resetPositionZero();
+	// }
 }
 
 void checkoutSerial(String status)
@@ -174,9 +211,10 @@ void checkoutSerial(String status)
 
 void resetPosition()
 {
-	stx.OneStep(10, 1000);
-	sty.OneStep(10, 1000);
-	stz.OneStep(-10, 1000);
+	// stx.OneStep(10, 1000);
+	// sty.OneStep(10, 1000);
+	// stz.OneStep(-10, 1000);
+	// resetPositionZero();
 	first = false;
 	cmd = 0;
 }
@@ -239,7 +277,14 @@ void recPerintah()
 		}
 		else if (order == "r")
 		{
-			resetPositionZero();
+			if (incomingValue == 1)
+			{
+				resetPositionZero();
+			}
+			else
+			{
+				checkoutSerial("2");
+			}
 		}
 		// printLocation();
 	}
@@ -251,6 +296,8 @@ void stopMotorX() // function activated by the pressed microswitch
 	stepX.stop();				 // stop motor
 	stepX.disableOutputs();		 // disable power
 	xpos = 0;
+	resetPosX = false;
+	checkReset();
 }
 
 void stopMotorY() // function activated by the pressed microswitch
@@ -259,6 +306,8 @@ void stopMotorY() // function activated by the pressed microswitch
 	stepY.stop();				 // stop motor
 	stepY.disableOutputs();		 // disable power
 	ypos = 0;
+	resetPosY = false;
+	checkReset();
 }
 
 void stopMotorZ() // function activated by the pressed microswitch
@@ -269,8 +318,50 @@ void stopMotorZ() // function activated by the pressed microswitch
 	zpos = 0;
 }
 
+void checkReset()
+{
+	if (!resetPosX && !resetPosZ)
+	{
+		if(resetFirst){
+			resetFirst = false;
+			Serial.println((String) "start");
+		}else{
+			checkoutSerial("2");
+		}
+	}
+}
+
+void resetLoop()
+{
+	if (resetPosX)
+	{
+		xpos = 0;
+		stx.OneStep(5, 1000);
+		if (digitalRead(26) == LOW)
+		{
+			stopMotorX();
+		}
+	}
+
+	if (resetPosY)
+	{
+		ypos = 0;
+		sty.OneStep(5, 1200);
+		if (digitalRead(24) == LOW)
+		{
+			stopMotorY();
+		}
+	}
+}
+
 void loop()
 {
+	delay(200);
+
+	if (digitalRead(26) == LOW)
+	{
+		// Serial.println("pressed");
+	}
 	// Serial.println((String)"START");
 	digitalWrite(LED_BUILTIN, HIGH);
 	// delay(1000);
@@ -280,9 +371,11 @@ void loop()
 	{
 		digitalWrite(air, LOW);
 		digitalWrite(npk, LOW);
-		Serial.println((String) "start");
+		// Serial.println((String) "start");
 		delay(1000);
 		resetPosition();
 	}
+
 	recPerintah();
+	resetLoop();
 }
