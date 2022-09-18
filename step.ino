@@ -5,7 +5,8 @@
 #define air 28
 #define npk 30
 #define limit_switch_pin_x 26
-#define limit_switch_pin_y 24
+#define limit_switch_pin_y 22
+#define limit_switch_pin_z 24
 
 UniversalStep stx(5, 2, 200);
 UniversalStep sty(6, 3, 200);
@@ -22,7 +23,7 @@ int countFirst = 0;
 bool terhubung = false;
 bool resetPosX = true;
 bool resetPosY = true;
-bool resetPosZ = false;
+bool resetPosZ = true;
 int speed = 1000;
 int xpos = 0;
 int ypos = 0;
@@ -45,6 +46,7 @@ void setup()
 	Serial.begin(9600);
 	pinMode(limit_switch_pin_x, INPUT_PULLUP);
 	pinMode(limit_switch_pin_y, INPUT_PULLUP);
+	pinMode(limit_switch_pin_z, INPUT_PULLUP);
 	attachInterrupt(digitalPinToInterrupt(limit_switch_pin_x), stopMotorX, FALLING);
 
 	// Serial.println((String) " DIR :" + stx.GetDirPin() + " STEP :" + stx.GetStepPin() + " STEPROTATION :" + stx.GetStepPerRevolution());
@@ -74,8 +76,8 @@ void enStep()
 void moveAxis(int langkah, int axis)
 {
 	enStep();
-	int posisiLangkah = langkah;
 	langkah *= 200;
+	int posisiLangkah = langkah;
 	Serial.println((String) "langkah : " + posisiLangkah + " (" + langkah + ")");
 	if (axis == 1)
 	{
@@ -124,10 +126,13 @@ void doCommand(int cm)
 	}
 	else if (cmd == 6)
 	{
-		stepZ.moveTo(30);
-		stepZ.runToPosition();
-		delay(5500);
-		stepZ.moveTo(0);
+		digitalWrite(air, HIGH);
+		delay(3000);
+		digitalWrite(air, LOW);
+		int posDown = 40 * 200;
+		stepX.moveTo(xpos + (10 * 200));
+		stepX.runToPosition();
+		stepZ.moveTo(posDown * (-1));
 		stepZ.runToPosition();
 		zpos = 0;
 	}
@@ -138,6 +143,7 @@ void resetPositionZero()
 {
 	resetPosX = true;
 	resetPosY = true;
+	resetPosZ = true;
 	// while (loop)
 	// {
 	//
@@ -195,7 +201,7 @@ void checkoutSerial(String status)
 		Serial.print(F(", \"status\": \""));
 		Serial.print(status);
 		Serial.println(F("\"}"));
-		delay(1000);
+		// delay(1000);
 	}
 	else
 	{
@@ -206,9 +212,9 @@ void checkoutSerial(String status)
 		Serial.print(F("\", \"cmd\": "));
 		Serial.print(cmd);
 		Serial.println(F("}"));
-		delay(1000);
+		// delay(1000);
 	}
-	delay(5000);
+	delay(2000);
 }
 
 void resetPosition()
@@ -319,11 +325,31 @@ void stopMotorZ() // function activated by the pressed microswitch
 	stepZ.stop();				 // stop motor
 	stepZ.disableOutputs();		 // disable power
 	zpos = 0;
+	resetPosZ = false;
+	checkReset();
 }
 
 void checkReset()
 {
-	if (!resetPosX && !resetPosZ)
+	if(resetPosX){
+		Serial.println((String) "X True");
+	}else{
+		Serial.println((String) "X False");
+	}
+
+	if(resetPosY){
+		Serial.println((String) "Y True");
+	}else{
+		Serial.println((String) "Y False");
+	}
+
+	if(resetPosZ){
+		Serial.println((String) "Z True");
+	}else{
+		Serial.println((String) "Z False");
+	}
+
+	if (!resetPosX && !resetPosY && !resetPosZ)
 	{
 		if (resetFirst && countFirst == 0)
 		{
@@ -340,8 +366,22 @@ void checkReset()
 
 void resetLoop()
 {
+
+	if (resetPosZ)
+	{
+		// Serial.println((String) "resetPosZ true");
+
+		zpos = 0;
+		stz.OneStep(-5, 1300);
+		if (digitalRead(22) == LOW)
+		{
+			stopMotorZ();
+		}
+	}
+
 	if (resetPosX)
 	{
+		// Serial.println((String) "resetPosX true");
 		xpos = 0;
 		stx.OneStep(5, 1000);
 		if (digitalRead(26) == LOW)
@@ -352,6 +392,7 @@ void resetLoop()
 
 	if (resetPosY)
 	{
+		// Serial.println((String) "resetPosY true");
 		ypos = 0;
 		sty.OneStep(5, 1200);
 		if (digitalRead(24) == LOW)
@@ -363,11 +404,11 @@ void resetLoop()
 
 void loop()
 {
-	delay(200);
+	// delay(200);
 
-	if (digitalRead(26) == LOW)
+	if (digitalRead(24) == LOW)
 	{
-		// Serial.println("pressed");
+		// Serial.println("pressed z");
 	}
 	// Serial.println((String)"START");
 	digitalWrite(LED_BUILTIN, HIGH);
