@@ -5,8 +5,8 @@
 #define air 28
 #define npk 30
 #define limit_switch_pin_x 26
-#define limit_switch_pin_y 22
-#define limit_switch_pin_z 24
+#define limit_switch_pin_y 24
+#define limit_switch_pin_z 22
 
 UniversalStep stx(5, 2, 200);
 UniversalStep sty(6, 3, 200);
@@ -54,8 +54,9 @@ void setup()
 	stepX.setAcceleration(maxAccel);
 	stepY.setMaxSpeed(msy);
 	stepY.setAcceleration(may);
-	stepZ.setMaxSpeed(msy);
-	stepZ.setAcceleration(may);
+	stepZ.setMaxSpeed(300);
+	stepZ.setAcceleration(300);
+	// stepZ.setSpeed(160);
 	disStep();
 }
 
@@ -129,7 +130,7 @@ void doCommand(int cm)
 		digitalWrite(air, HIGH);
 		delay(3000);
 		digitalWrite(air, LOW);
-		int posDown = 40 * 200;
+		int posDown = 70 * 200;
 		stepX.moveTo(xpos + (10 * 200));
 		stepX.runToPosition();
 		stepZ.moveTo(posDown * (-1));
@@ -372,8 +373,11 @@ void resetLoop()
 		// Serial.println((String) "resetPosZ true");
 
 		zpos = 0;
-		stz.OneStep(-5, 1300);
-		if (digitalRead(22) == LOW)
+		stz.OneStep(7, 1000);
+		// stepZ.moveTo(10);
+		// stepZ.setCurrentPosition(0);
+		// stepX.runToPosition();
+		if (digitalRead(limit_switch_pin_z) == LOW)
 		{
 			stopMotorZ();
 		}
@@ -383,8 +387,8 @@ void resetLoop()
 	{
 		// Serial.println((String) "resetPosX true");
 		xpos = 0;
-		stx.OneStep(5, 1000);
-		if (digitalRead(26) == LOW)
+		stx.OneStep(5, 1800);
+		if (digitalRead(limit_switch_pin_x) == LOW)
 		{
 			stopMotorX();
 		}
@@ -395,7 +399,9 @@ void resetLoop()
 		// Serial.println((String) "resetPosY true");
 		ypos = 0;
 		sty.OneStep(5, 1200);
-		if (digitalRead(24) == LOW)
+		// stepY.moveTo(10);
+                // stepY.setCurrentPosition(0);
+		if (digitalRead(limit_switch_pin_y) == LOW)
 		{
 			stopMotorY();
 		}
