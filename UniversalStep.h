@@ -45,6 +45,7 @@ public:
             this->jumlahLangkah = posisi - this->lokasi;
             return true;
         }
+        this->lokasi = posisi;
     }
 
     void OneStep(int posisi, int speed = 500)

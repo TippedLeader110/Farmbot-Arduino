@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<body>
+    <a href="#google">WDADWADAWD</a>
+
+    <h1>RP. <span id="test"></span></h1>
+    <br>
+    <select name="t" id="t">
+        <option value="10000">Ekonomi</option>
+        <option value="10000000000">Sultan</option>
+    </select>
+
+</body>
+<script>
+
+$('#t').change(function(event) {
+    event.preventDefault();
+    var harga = $('#t').val() //ini this $(this) sama dengan $('#kelasp') kenapa pake this karna kita didalam fungsi dia
+    $('#test').html(harga);
+})
+
+</script>
+</html>
