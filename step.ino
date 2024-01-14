@@ -15,6 +15,7 @@
 	int val = 5;
 	bool first = true;
 	bool resetFirst = true;
+	int antiLoopCount = 0;
 	AccelStepper stepX = AccelStepper(1, 2, 5);
 	AccelStepper stepY = AccelStepper(1, 3, 6);
 	AccelStepper stepZ = AccelStepper(1, 4, 7);
@@ -24,6 +25,7 @@
 	bool resetPosX = true;
 	bool resetPosY = true;
 	bool resetPosZ = true;
+	bool antiLoop = false;
 	int speed = 1000;
 	int xpos = 0;
 	int ypos = 0;
@@ -369,17 +371,18 @@
 
 	void resetLoop()
 	{
-
+		Serial.println((String)"RESET LOOP");
 		if (resetPosZ)
 		{
-			// Serial.println((String) "resetPosZ true");
+			Serial.println((String) "resetPosZ true");
 
-			// zpos = 0;
-			// stz.OneStep(-10, 1000);
-			// Serial.println(" z move");
-			stepZ.moveTo(5000);
-			stepZ.runToPosition();
-			stepZ.setCurrentPosition(0);
+			zpos = 0;
+			
+			stz.OneStep(-10, 1800);
+			Serial.println(" z move");
+			// stepZ.moveTo(5000);
+			// stepZ.runToPosition();
+			// stepZ.setCurrentPosition(0);
 			if (digitalRead(limit_switch_pin_z) == LOW)
 			{
 				stopMotorZ();
@@ -388,18 +391,20 @@
 
 		if (resetPosX)
 		{
-			// Serial.println((String) "resetPosX true");
+			Serial.println((String) "resetPosX true");
 			xpos = 0;
 			stx.OneStep(5, 1800);
 			if (digitalRead(limit_switch_pin_x) == LOW)
 			{
+				Serial.println((String) "resetPosX Switch LOW");
 				stopMotorX();
 			}
+			Serial.println((String) "resetPosX Switch HIGH");
 		}
 
 		if (resetPosY)
 		{
-			// Serial.println((String) "resetPosY true");
+			Serial.println((String) "resetPosY true");
 			ypos = 0;
 			sty.OneStep(5, 1200);
 			// stepY.moveTo(10);
@@ -409,6 +414,18 @@
 				stopMotorY();
 			}
 		}
+
+		// if(antiLoop && antiLoopCount >= 20){
+		// 	delay(28800);
+		// 	Serial.println((String) "STUCK ");
+		// }
+
+		// if(!resetPosY && !resetPosX && !resetPosZ){
+		// 	antiLoop = false;
+		// 	antiLoopCount = 0;
+		// }else{
+		// 	antiLoopCount++;
+		// }
 	}
 
 	void loop()
@@ -419,7 +436,7 @@
 		{
 			// Serial.println("pressed z");
 		}
-		// Serial.println((String)"START");
+		Serial.println((String)"START");
 		digitalWrite(LED_BUILTIN, HIGH);
 		// delay(1000);
 		digitalWrite(LED_BUILTIN, LOW);
